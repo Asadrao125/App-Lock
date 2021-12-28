@@ -54,16 +54,7 @@ class MainActivity : AppCompatActivity() {
                 startActivity(intent)
             }
         }
-        /* if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-             ContextCompat.startForegroundService(
-                 baseContext, Intent(
-                     baseContext,
-                     AppLockService::class.java
-                 )
-             )
-         } else {*/
         startService(Intent(baseContext, AppLockService::class.java))
-        //}
     }
 
     @SuppressLint("QueryPermissionsNeeded")
