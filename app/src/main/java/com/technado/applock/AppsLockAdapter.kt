@@ -14,7 +14,6 @@ import androidx.core.content.pm.ShortcutManagerCompat
 import androidx.core.graphics.drawable.IconCompat
 import androidx.recyclerview.widget.RecyclerView
 
-
 class AppsLockAdapter(var context: Context, var list: List<AppModel>) :
     RecyclerView.Adapter<AppsLockAdapter.MyViewHolder>() {
     lateinit var sharedPref: SharedPref
