@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.provider.Settings
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -66,6 +67,7 @@ class MainActivity : AppCompatActivity() {
                 val appName = p.applicationInfo.loadLabel(this.packageManager!!).toString()
                 val icon = p.applicationInfo.loadIcon(this.packageManager!!)
                 val packages = p.applicationInfo.packageName
+                Log.d("packages", "getInstalledApps: " + packages)
                 installedAppsList.add(AppModel(appName, icon, packages))
             }
         }

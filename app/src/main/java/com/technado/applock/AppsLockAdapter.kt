@@ -1,14 +1,20 @@
 package com.technado.applock
 
+import android.annotation.SuppressLint
+import android.app.PendingIntent
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.content.pm.ShortcutInfo
+import android.content.pm.ShortcutManager
+import android.graphics.drawable.Icon
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.core.content.pm.ShortcutInfoCompat
 import androidx.core.content.pm.ShortcutManagerCompat
 import androidx.core.graphics.drawable.IconCompat
@@ -29,7 +35,8 @@ class AppsLockAdapter(var context: Context, var list: List<AppModel>) :
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         holder.itemView.setOnClickListener(View.OnClickListener {
             //Toast.makeText(context, "" + list.get(position).getName(), Toast.LENGTH_SHORT).show()
-            addShortcutToHomeScreen(context, list, position)
+            //addShortcutToHomeScreen(context, list, position)
+            createWebActivityShortcut(position)
         })
 
         holder.appName.text = list.get(position).getName()
@@ -80,6 +87,39 @@ class AppsLockAdapter(var context: Context, var list: List<AppModel>) :
         } else {
             Toast.makeText(context, "ELSE " + sharedPref.read("pkg-name", ""), Toast.LENGTH_SHORT)
                 .show()
+        }
+    }
+
+    @SuppressLint("NewApi")
+    fun createWebActivityShortcut(position: Int) {
+        val shortcutManager = ContextCompat.getSystemService<ShortcutManager>(
+            context,
+            ShortcutManager::class.java
+        )
+        if (shortcutManager!!.isRequestPinShortcutSupported) {
+            // perameter for ID
+            val pinShortcutInfoBuilder = ShortcutInfo.Builder(context, list.get(position).getName())
+            pinShortcutInfoBuilder.setShortLabel(list.get(position).getName())
+            //val intent = Intent(Intent.ACTION_VIEW, null, context, MainActivity::class.java)
+            val intent =
+                context.packageManager.getLaunchIntentForPackage(list.get(position).getPackages())
+            pinShortcutInfoBuilder.setIntent(intent!!)
+            pinShortcutInfoBuilder.setIcon(Icon.createWithResource(context, R.drawable.ic_lock))
+            val pinShortcutInfo = pinShortcutInfoBuilder.build()
+
+            val pinnedShortcutCallbackIntent = shortcutManager.createShortcutResultIntent(
+                pinShortcutInfo
+            )
+
+            val successCallback = PendingIntent.getBroadcast(
+                context, 0,
+                pinnedShortcutCallbackIntent, 0
+            )
+
+            shortcutManager.requestPinShortcut(
+                pinShortcutInfo,
+                successCallback.intentSender
+            )
         }
     }
 }
