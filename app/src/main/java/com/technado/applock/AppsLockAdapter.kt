@@ -101,8 +101,7 @@ class AppsLockAdapter(var context: Context, var list: List<AppModel>) :
             val pinShortcutInfoBuilder = ShortcutInfo.Builder(context, list.get(position).getName())
             pinShortcutInfoBuilder.setShortLabel(list.get(position).getName())
             //val intent = Intent(Intent.ACTION_VIEW, null, context, MainActivity::class.java)
-            val intent =
-                context.packageManager.getLaunchIntentForPackage(list.get(position).getPackages())
+            val intent = context.packageManager.getLaunchIntentForPackage(list.get(position).getPackages())
             pinShortcutInfoBuilder.setIntent(intent!!)
             pinShortcutInfoBuilder.setIcon(Icon.createWithResource(context, R.drawable.ic_lock))
             val pinShortcutInfo = pinShortcutInfoBuilder.build()
