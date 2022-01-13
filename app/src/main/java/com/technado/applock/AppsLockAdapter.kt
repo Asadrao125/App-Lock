@@ -33,19 +33,21 @@ class AppsLockAdapter(var context: Context, var list: List<AppModel>) :
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        holder.itemView.setOnClickListener(View.OnClickListener {
-            //Toast.makeText(context, "" + list.get(position).getName(), Toast.LENGTH_SHORT).show()
-            //addShortcutToHomeScreen(context, list, position)
-            createWebActivityShortcut(position)
-        })
+
 
         holder.appName.text = list.get(position).getName()
         holder.image.setImageDrawable(list.get(position).getIcon())
 
-        holder.imgLock.setOnClickListener(View.OnClickListener {
-            //sharedPref.write("pkg-name", list.get(position).getPackages())
-            //Toast.makeText(context, "" + sharedPref.read("pkg-name", ""), Toast.LENGTH_SHORT).show()
+        holder.itemView.setOnClickListener(View.OnClickListener {
+            //createWebActivityShortcut(position)
+
+            Toast.makeText(context, "" + position, Toast.LENGTH_SHORT).show()
+
+            holder.image.setImageDrawable(context.resources.getDrawable(R.drawable.ic_lock))
+            //notifyItemChanged(position)
+
         })
+
     }
 
     override fun getItemCount(): Int {
@@ -55,12 +57,10 @@ class AppsLockAdapter(var context: Context, var list: List<AppModel>) :
     class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var appName: TextView
         var image: ImageView
-        var imgLock: ImageView
 
         init {
             appName = itemView.findViewById(R.id.appName)
             image = itemView.findViewById(R.id.image)
-            imgLock = itemView.findViewById(R.id.imgLock)
         }
     }
 
@@ -101,7 +101,8 @@ class AppsLockAdapter(var context: Context, var list: List<AppModel>) :
             val pinShortcutInfoBuilder = ShortcutInfo.Builder(context, list.get(position).getName())
             pinShortcutInfoBuilder.setShortLabel(list.get(position).getName())
             //val intent = Intent(Intent.ACTION_VIEW, null, context, MainActivity::class.java)
-            val intent = context.packageManager.getLaunchIntentForPackage(list.get(position).getPackages())
+            val intent =
+                context.packageManager.getLaunchIntentForPackage(list.get(position).getPackages())
             pinShortcutInfoBuilder.setIntent(intent!!)
             pinShortcutInfoBuilder.setIcon(Icon.createWithResource(context, R.drawable.ic_lock))
             val pinShortcutInfo = pinShortcutInfoBuilder.build()

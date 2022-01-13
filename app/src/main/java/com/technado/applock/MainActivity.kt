@@ -13,6 +13,7 @@ import android.provider.Settings
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.technado.applock.UStats.getUsageStatsList
@@ -27,7 +28,7 @@ class MainActivity : AppCompatActivity() {
 
         val recyclerView: RecyclerView
         recyclerView = findViewById(R.id.recyclerView)
-        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.layoutManager = GridLayoutManager(this, 4)
         recyclerView.setHasFixedSize(true)
 
         installedAppsList = ArrayList()
