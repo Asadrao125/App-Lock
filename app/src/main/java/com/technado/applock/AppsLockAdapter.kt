@@ -33,21 +33,16 @@ class AppsLockAdapter(var context: Context, var list: List<AppModel>) :
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-
-
         holder.appName.text = list.get(position).getName()
         holder.image.setImageDrawable(list.get(position).getIcon())
 
         holder.itemView.setOnClickListener(View.OnClickListener {
-            //createWebActivityShortcut(position)
-
-            Toast.makeText(context, "" + position, Toast.LENGTH_SHORT).show()
-
             holder.image.setImageDrawable(context.resources.getDrawable(R.drawable.ic_lock))
-            //notifyItemChanged(position)
+            val intent =
+                context.packageManager.getLaunchIntentForPackage(list.get(position).getPackages())
 
+            context.startActivity(intent)
         })
-
     }
 
     override fun getItemCount(): Int {
@@ -75,7 +70,6 @@ class AppsLockAdapter(var context: Context, var list: List<AppModel>) :
                     list.get(position).getPackages()
                 )
             )
-
             val shortcutInfo = ShortcutInfoCompat.Builder(context, list.get(position).getPackages())
                 .setIntent(
                     addIntent
@@ -97,10 +91,8 @@ class AppsLockAdapter(var context: Context, var list: List<AppModel>) :
             ShortcutManager::class.java
         )
         if (shortcutManager!!.isRequestPinShortcutSupported) {
-            // perameter for ID
             val pinShortcutInfoBuilder = ShortcutInfo.Builder(context, list.get(position).getName())
             pinShortcutInfoBuilder.setShortLabel(list.get(position).getName())
-            //val intent = Intent(Intent.ACTION_VIEW, null, context, MainActivity::class.java)
             val intent =
                 context.packageManager.getLaunchIntentForPackage(list.get(position).getPackages())
             pinShortcutInfoBuilder.setIntent(intent!!)
@@ -110,12 +102,10 @@ class AppsLockAdapter(var context: Context, var list: List<AppModel>) :
             val pinnedShortcutCallbackIntent = shortcutManager.createShortcutResultIntent(
                 pinShortcutInfo
             )
-
             val successCallback = PendingIntent.getBroadcast(
                 context, 0,
                 pinnedShortcutCallbackIntent, 0
             )
-
             shortcutManager.requestPinShortcut(
                 pinShortcutInfo,
                 successCallback.intentSender
